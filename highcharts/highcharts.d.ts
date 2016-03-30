@@ -3259,6 +3259,24 @@ interface HighchartsBarStates {
 
 interface HighchartsPieStates extends HighchartsBarStates, HighchartsLineStates { }
 
+interface HighchartsSelectStates {
+    /**
+     * Border for selection
+     */
+    borderColor?: string;
+    /**
+     * Color for selection
+     */
+    color?: string;
+    /**
+     * Border radius for selection
+     */
+    borderRadius?: number;
+    /**
+     *
+     */
+}
+
 interface HighchartsAreaZone {
     /**
      * Defines the color of the series.
@@ -3782,6 +3800,12 @@ interface HighchartsSeriesChart {
          * Options for the hovered series
          */
         hover?: HighchartsLineStates;
+        /**
+         * Options for selected series
+         * highcharts includes default options of select: { marker: {} } so this typing is not 100% correct.
+         * API is undocumented, so we'll define what we know...
+         */
+        select?: HighchartsSelectStates;
     };
     /**
      * Sticky tracking of mouse events. When true, the mouseOut event on a series isn't triggered until the mouse moves
