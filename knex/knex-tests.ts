@@ -1,8 +1,10 @@
 /// <reference path='knex.d.ts' />
+
 /// <reference path='../lodash/lodash-3.10.d.ts' />
-import Knex = require('knex');
-import _ = require('lodash');
-'use strict';
+
+import * as Knex from 'knex';
+import * as _ from 'lodash';
+
 // Initializing the Library
 var knex = Knex({
   client: 'sqlite3',
@@ -329,11 +331,11 @@ knex.transaction(function(trx) {
     .insert({name: 'Old Books'}, 'id')
     .into('catalogues')
     .then(function(ids) {
-      return Promise.map(books, function(book) {
+      return Promise.all(books.map(function (book: any) {
         book.catalogue_id = ids[0];
         // Some validation could take place here.
         return trx.insert(info).into('books');
-      });
+      }));
     });
 })
 .then(function(inserts) {
@@ -359,13 +361,13 @@ knex.transaction(function(trx) {
     .into('catalogues')
     .transacting(trx)
     .then(function(ids) {
-      return Promise.map(books, function(book) {
+      return Promise.all(books.map(function(book: any) {
         book.catalogue_id = ids[0];
 
         // Some validation could take place here.
 
         return knex.insert(info).into('books').transacting(trx);
-      });
+      }));
     })
     .then(trx.commit)
     .catch(trx.rollback);
@@ -495,38 +497,39 @@ query.then(function(x: any) {
     return x;
 });
 
-knex.select('name').from('users').limit(10).map(function(row: any) {
-  return row.name;
-}).then(function(names) {
+knex.select('name').from('users').limit(10).then(function (rows: any[]): string[] {
+  return rows.map(function (row: any): string {
+    return row.name;
+  });
+}).then(function(names: string[]) {
   console.log(names);
-}).catch(function(e) {
+}).catch(function(e: Error) {
   console.error(e);
 });
 
-knex.select('name').from('users').limit(10).reduce(function(memo: any, row: any) {
-  memo.names.push(row.name);
-  memo.count++;
-  return memo;
-}, {count: 0, names: []}).then(function(obj) {
+knex.select('name').from('users').limit(10).then(function (rows: any[]) {
+  return rows.reduce(function(memo: any, row: any) {
+    memo.names.push(row.name);
+    memo.count++;
+    return memo;
+  }, {count: 0, names: []})
+}).then(function(obj: any) {
   console.log(obj);
-}).catch(function(e) {
+}).catch(function(e: Error) {
   console.error(e);
 });
 
 knex.select('name').from('users')
   .limit(10)
-  .bind(console)
-  .then(console.log)
-  .catch(console.error);
+  .then(console.log.bind(console))
+  .catch(console.error.bind(console));
 
 var values: any[];
-// Without return:
+
 knex.insert(values).into('users')
   .then(function() {
     return {inserted: true};
   });
-
-knex.insert(values).into('users').return({inserted: true});
 
 knex.select('name').from('users')
   .where('id', '>', 20)
@@ -593,8 +596,8 @@ knex.migrate.latest();
 knex.migrate.rollback(config);
 knex.migrate.rollback();
 
-knex.migrate.currentversion(config);
-knex.migrate.currentversion();
+knex.migrate.currentVersion(config);
+knex.migrate.currentVersion();
 
 knex.seed.make(name, config);
 knex.seed.make(name);
