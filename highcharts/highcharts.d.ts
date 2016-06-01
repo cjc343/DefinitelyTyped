@@ -5057,6 +5057,12 @@ interface HighchartsDataPoint {
      * options like minSize, maxSize, sizeBy, zMin and zMax.
      */
     z?: number;
+    /**
+     * Custom Attributes
+     */
+    extra_line?: number;
+    mean?: number;
+    actualsLine?: number;
 }
 
 /**
@@ -5834,6 +5840,10 @@ interface HighchartsChartObject {
     yAxis: HighchartsAxisObject[];
 
     renderer: HighchartsRendererObject;
+    /**
+     * Private
+     */
+    chartWidth: number;
 }
 
 interface HighchartsChart {
@@ -5935,6 +5945,10 @@ interface HighchartsElementObject {
      * @since 2.0
      */
     toFront(): HighchartsElementObject;
+    /**
+     * Private
+     */
+    shadow(shadowOptions: boolean | {}, group?: any, cutOff?: boolean): HighchartsElementObject;
 }
 
 /**
@@ -6121,6 +6135,10 @@ interface HighchartsPointObject {
      * @since 1.2.0
      */
     category: string | number;
+    /**
+     * Present on boxplots
+     */
+    median: number;
     name: string;
     /**
      * The percentage for points in a stacked series or pies.
@@ -6182,6 +6200,11 @@ interface HighchartsPointObject {
      * @since 1.2.0
      */
     y: number;
+    /**
+     * Private
+     */
+    firePointEvent(eventType: string, eventArgs?: {}, defaultHandler?: Function): void;
+    index: number;
 }
 
 /**
@@ -6313,6 +6336,11 @@ interface HighchartsSeriesObject {
      * @since 1.2.0
      */
     yAxis: HighchartsAxisObject;
+    /**
+     * Private
+     */
+    index: number;
+    xIncrement: number;
 }
 
 interface JQuery {
